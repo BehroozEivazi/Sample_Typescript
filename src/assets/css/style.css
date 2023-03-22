@@ -14,10 +14,13 @@ body {
     color: #444;
     font-family: "Vazir";
     text-align: center;
-    margin: 1rem;
+    /* margin: 1rem; */
 }
 
 .operation_btns {
     position: absolute;
     left: 0;
+}
+.mt-24 {
+    margin-top: 24px;
 }

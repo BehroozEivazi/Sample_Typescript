@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import List from "./components/List";
-import AddPeople from "./components/AddPeople";
+// import Greeting from "./components/Greeting";
+import { Routes, Route, Link } from "react-router-dom";
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
+import Header from "./components/Header";
+import UserContext, { CurrentUserContextType } from "./components/context/UserContext";
+import Alert from "react-bootstrap/Alert";
+import Home from "./components/Home";
+
 export interface IPeople {
     id: number;
     fullName: string;
@@ -10,22 +17,37 @@ export interface IPeople {
 }
 
 const App = () => {
-    const [peoples, setPeoples] = useState<IPeople[]>([
-        {
-            id: 1,
-            fullName: "بهروز عیوضی",
-            age: 27,
-            img_url:
-                "https://imgv2.enama.ir/Product/Get/414/230/1000193/2aadf960-024a-11eb-8da3-8fd75e0200cb.jpg",
-            bio: "توسعه دهنده وب",
-        },
-    ]);
+    const [currnetUser, setCurrentUser] = useState<CurrentUserContextType | null>(null);
+
     return (
-        <div className="container" dir="rtl">
-            <h4 className="alert alert-info">مدیریت اشخاص</h4>
-            <List peoples={peoples} setPeoples={setPeoples} />
-            <AddPeople peoples={peoples} setPeoples={setPeoples} />
-        </div>
+        <UserContext.Provider value={currnetUser}>
+            <Header />
+            <div className="container" dir="rtl">
+                {currnetUser ? (
+                    <Alert variant={"success"}>{currnetUser.Email} خوش آمدی</Alert>
+                ) : (
+                    <Alert variant={"danger"}>لطفاوارد شو یا ثبت نام کن</Alert>
+                )}
+                <Routes>
+                    {!currnetUser ? (
+                        <>
+                            <Route
+                                path="/login"
+                                element={<Login setCurrentUser={setCurrentUser} />}
+                            />
+                            <Route
+                                path="/signUp"
+                                element={<SignUp setCurrentUser={setCurrentUser} />}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <Route path="*" element={<Home />} />
+                        </>
+                    )}
+                </Routes>
+            </div>
+        </UserContext.Provider>
     );
 };
 
